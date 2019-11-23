@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 
 app.get('/opencv.js', function(request, response) {
-    res.sendFile(__dirname + '/node_modules/opencv.js/opencv.js');
+    response.sendFile(__dirname + '/node_modules/opencv.js/opencv.js');
 });
 
 app.get('/', (request, response) => {

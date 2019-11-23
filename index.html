@@ -10,32 +10,88 @@
     <div>
         <div class="inputoutput">
             <img id="imageSrc"/> <br>
-            <input type="file" id="fileInput" name="file"/></div>
+            <input type="file" id="fileInput" name="file" accept="application/pdf"/></div>
         </div>
-        <div class="inputoutput">
-            <canvas id="canvasOutput" ></canvas>
+        <div id="canvasContainer">
+            <canvas id="canvas"></canvas>
         </div>
     </div>
     <script async src="/opencv.js" onload="onOpenCvReady();" type="text/javascript"></script>
     <script async src="https://unpkg.com/pdfjs-dist@latest/build/pdf.min.js"></script>
     <script type="text/javascript">
+        
+        function onOpenCvReady() {
+            document.getElementById('status').innerHTML = 'OpenCV.js is ready.';
+        }
+
+        function sleep(seconds) 
+        {
+            var e = new Date().getTime() + (seconds * 1000);
+            while (new Date().getTime() <= e) {}
+        }
+
+        function renderPage(page, canvasContainer, isFirstPage) {
+            if(!isFirstPage)
+                while(canvasContainer.firstChild)
+                        canvasContainer.removeChild(canvasContainer.firstChild);
+
+            var canvas = document.createElement('canvas');
+            var context = canvas.getContext('2d');
+
+            var scale = 1.0;
+            var viewport = page.getViewport(scale);
+
+            // Prepare canvas using PDF page dimensions
+            canvas.height = viewport.height;
+            canvas.width = viewport.width;
+
+            // Render PDF page into canvas context
+            var renderContext = {
+                canvasContext: context,
+                viewport: viewport
+            };
+
+            page.render(renderContext).then(canvasContainer.append(canvas));
+        }
+
         let imgElement = document.getElementById('imageSrc');
         let inputElement = document.getElementById('fileInput');
-        
+
+        /*
         inputElement.addEventListener('change', (e) => {
             imgElement.src = URL.createObjectURL(e.target.files[0]);
         }, false);
 
         imgElement.onload = function() {
             let mat = cv.imread(imgElement);
-            cv.imshow('canvasOutput', mat);
+            cv.imshow('canvas', mat);
             imgElement.remove();
             mat.delete();
         };
+        */
         
-        function onOpenCvReady() {
-            document.getElementById('status').innerHTML = 'OpenCV.js is ready.';
-        }
+        inputElement.addEventListener('change', (e) => {
+            
+            pdfjsLib.getDocument(URL.createObjectURL(e.target.files[0])).then(function(pdf) {
+
+                var canvasContainer = document.getElementById('canvasContainer');
+
+                pdf.getPage(1).then(function(page) {
+                    renderPage(page, canvasContainer, true);
+                });
+
+                inputElement.remove();
+
+                /*
+                pdf.getPage(2).then(function(page) {
+                    renderPage(page, canvasContainer, false);
+                });
+                */
+
+            });
+
+        }, false);
+        
     </script>
 </body>
 </html>
