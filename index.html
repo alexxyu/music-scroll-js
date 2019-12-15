@@ -8,12 +8,16 @@
     <h2>MusicScroll</h2>
     <p id="status">OpenCV.js is loading...</p>
     <div>
-        <div class="inputoutput">
+        <div id="io">
             <img id="imageSrc"/> <br>
             <input type="file" id="fileInput" name="file" accept="application/pdf"/></div>
         </div>
         <div id="canvasContainer">
             <canvas id="canvas"></canvas>
+        </div>
+        <div id="changePage">
+            <button id="previousPage">Previous</button>
+            <button id="nextPage">Next</button>
         </div>
     </div>
     <script async src="/opencv.js" onload="onOpenCvReady();" type="text/javascript"></script>
@@ -24,22 +28,14 @@
             document.getElementById('status').innerHTML = 'OpenCV.js is ready.';
         }
 
-        function sleep(seconds) 
-        {
-            var e = new Date().getTime() + (seconds * 1000);
-            while (new Date().getTime() <= e) {}
-        }
+        function renderPage(page) {
 
-        function renderPage(page, canvasContainer, isFirstPage) {
-            if(!isFirstPage)
-                while(canvasContainer.firstChild)
-                        canvasContainer.removeChild(canvasContainer.firstChild);
-
-            var canvas = document.createElement('canvas');
-            var context = canvas.getContext('2d');
+            var canvas = document.getElementById('canvas');
+            const context = canvas.getContext('2d');
+            context.clearRect(0, 0, canvas.width, canvas.height);
 
             var scale = 1.0;
-            var viewport = page.getViewport(scale);
+            var viewport = page.getViewport({scale: scale});
 
             // Prepare canvas using PDF page dimensions
             canvas.height = viewport.height;
@@ -51,42 +47,47 @@
                 viewport: viewport
             };
 
-            page.render(renderContext).then(canvasContainer.append(canvas));
+            page.render(renderContext);
         }
 
         let imgElement = document.getElementById('imageSrc');
         let inputElement = document.getElementById('fileInput');
-
-        /*
-        inputElement.addEventListener('change', (e) => {
-            imgElement.src = URL.createObjectURL(e.target.files[0]);
-        }, false);
-
-        imgElement.onload = function() {
-            let mat = cv.imread(imgElement);
-            cv.imshow('canvas', mat);
-            imgElement.remove();
-            mat.delete();
-        };
-        */
         
         inputElement.addEventListener('change', (e) => {
             
-            pdfjsLib.getDocument(URL.createObjectURL(e.target.files[0])).then(function(pdf) {
+            pdfjsLib.getDocument(URL.createObjectURL(e.target.files[0])).promise.then(function(pdf) {
 
-                var canvasContainer = document.getElementById('canvasContainer');
+                const numPages = pdf.numPages;
+                let currPage = 1
 
-                pdf.getPage(1).then(function(page) {
-                    renderPage(page, canvasContainer, true);
+                // Render first page
+                pdf.getPage(currPage).then(function(page) {
+                    renderPage(page);
+                    inputElement.remove();
                 });
 
-                inputElement.remove();
+                let nextPageButton = document.getElementById('nextPage');
+                let previousPageButton = document.getElementById('previousPage');
+                nextPageButton.addEventListener('click', (e) => {
+                    
+                    if(currPage < numPages) {
+                        currPage++;
+                        pdf.getPage(currPage).then(function(page) {
+                            renderPage(page);
+                        });
+                    }
 
-                /*
-                pdf.getPage(2).then(function(page) {
-                    renderPage(page, canvasContainer, false);
-                });
-                */
+                }, false);
+                previousPageButton.addEventListener('click', (e) => {
+                    
+                    if(currPage > 1) {
+                        currPage--;
+                        pdf.getPage(currPage).then(function(page) {
+                            renderPage(page);
+                        });
+                    }
+
+                }, false);
 
             });
 
