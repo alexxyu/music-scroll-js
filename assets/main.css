@@ -1,0 +1,15 @@
+body {
+    font-family: monaco;
+    font-weight: 400;  
+    text-align: center;
+}
+
+h1 {
+    display: inline-block;
+    font-size: 30px;
+}
+
+#fileInput {
+  border: dashed 1px;
+  padding: 5px;
+}

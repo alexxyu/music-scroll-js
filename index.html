@@ -3,29 +3,32 @@
 <head>
     <meta charset="utf-8">
     <title>MusicScroll</title>
+
+    <!--Import CSS-->
+    <link rel="stylesheet" type="text/css" href="assets/main.css" />
+
+    <!--Import Favicon-->
+    <link rel="icon" sizes="16x16 32x32 64x64" href="assets/favicon.ico">
 </head>
 <body>
-    <h2>MusicScroll</h2>
-    <p id="status">OpenCV.js is loading...</p>
-    <div>
-        <div id="io">
-            <img id="imageSrc"/> <br>
-            <input type="file" id="fileInput" name="file" accept="application/pdf"/></div>
-        </div>
-        <div id="canvasContainer">
-            <canvas id="canvas"></canvas>
-        </div>
-        <div id="changePage">
-            <button id="previousPage">Previous</button>
-            <button id="nextPage">Next</button>
-        </div>
+    <h1>MusicScroll</h1>
+
+    <br>
+    <input type="file" id="fileInput" name="file" accept="application/pdf"/></div>
+    <div id="pageDisplay">
+        <canvas id="canvas"></canvas>
     </div>
+    <div id="changePage">
+        <button id="previousPage">Previous</button>
+        <button id="nextPage">Next</button>
+    </div>
+
     <script async src="/opencv.js" onload="onOpenCvReady();" type="text/javascript"></script>
     <script async src="https://unpkg.com/pdfjs-dist@latest/build/pdf.min.js"></script>
     <script type="text/javascript">
         
         function onOpenCvReady() {
-            document.getElementById('status').innerHTML = 'OpenCV.js is ready.';
+            console.log('OpenCV.js is ready.');
         }
 
         function renderPage(page) {

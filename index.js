@@ -1,7 +1,9 @@
 const express = require('express');
 const app = express();
 
-app.get('/opencv.js', function(request, response) {
+app.use('/assets', express.static(__dirname +'/assets'));
+
+app.get('/opencv.js', (request, response) => {
     response.sendFile(__dirname + '/node_modules/opencv.js/opencv.js');
 });
 
