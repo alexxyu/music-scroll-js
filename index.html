@@ -12,90 +12,24 @@
 </head>
 <body>
     <h1>MusicScroll</h1>
+    <button id="reset" onclick="window.location.reload()">Reset</button>
 
     <br>
-    <input type="file" id="fileInput" name="file" accept="application/pdf"/></div>
+    <input type="file" id="fileInput" name="file" accept="application/pdf"/>
+
     <div id="pageDisplay">
         <canvas id="canvas"></canvas>
     </div>
-    <div id="changePage">
-        <button id="previousPage">Previous</button>
-        <button id="nextPage">Next</button>
+
+    <div id="videoInput">
+        <video id="video" width="720" height="540" muted></video>
     </div>
 
-    <script async src="/opencv.js" onload="onOpenCvReady();" type="text/javascript"></script>
-    <script async src="https://unpkg.com/pdfjs-dist@latest/build/pdf.min.js"></script>
-    <script type="text/javascript">
-        
-        function onOpenCvReady() {
-            console.log('OpenCV.js is ready.');
-        }
-
-        function renderPage(page) {
-
-            var canvas = document.getElementById('canvas');
-            const context = canvas.getContext('2d');
-            context.clearRect(0, 0, canvas.width, canvas.height);
-
-            var scale = 1.0;
-            var viewport = page.getViewport({scale: scale});
-
-            // Prepare canvas using PDF page dimensions
-            canvas.height = viewport.height;
-            canvas.width = viewport.width;
-
-            // Render PDF page into canvas context
-            var renderContext = {
-                canvasContext: context,
-                viewport: viewport
-            };
-
-            page.render(renderContext);
-        }
-
-        let imgElement = document.getElementById('imageSrc');
-        let inputElement = document.getElementById('fileInput');
-        
-        inputElement.addEventListener('change', (e) => {
-            
-            pdfjsLib.getDocument(URL.createObjectURL(e.target.files[0])).promise.then(function(pdf) {
-
-                const numPages = pdf.numPages;
-                let currPage = 1
-
-                // Render first page
-                pdf.getPage(currPage).then(function(page) {
-                    renderPage(page);
-                    inputElement.remove();
-                });
-
-                let nextPageButton = document.getElementById('nextPage');
-                let previousPageButton = document.getElementById('previousPage');
-                nextPageButton.addEventListener('click', (e) => {
-                    
-                    if(currPage < numPages) {
-                        currPage++;
-                        pdf.getPage(currPage).then(function(page) {
-                            renderPage(page);
-                        });
-                    }
-
-                }, false);
-                previousPageButton.addEventListener('click', (e) => {
-                    
-                    if(currPage > 1) {
-                        currPage--;
-                        pdf.getPage(currPage).then(function(page) {
-                            renderPage(page);
-                        });
-                    }
-
-                }, false);
-
-            });
-
-        }, false);
-        
-    </script>
+    <script src="/face-api.js"></script>
+    <script src="https://unpkg.com/pdfjs-dist@latest/build/pdf.min.js"></script>
+    <script src="/track.js"></script>
 </body>
+<footer>
+    <a href="https://github.com/alexxyu/music-scroll-js">Source code</a>
+</footer>
 </html>

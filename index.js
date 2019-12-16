@@ -3,8 +3,14 @@ const app = express();
 
 app.use('/assets', express.static(__dirname +'/assets'));
 
-app.get('/opencv.js', (request, response) => {
-    response.sendFile(__dirname + '/node_modules/opencv.js/opencv.js');
+app.use('/models', express.static(__dirname +'/models'));
+
+app.get('/face-api.js', (request, response) => {
+    response.sendFile(__dirname + '/scripts/face-api.js');
+});
+
+app.get('/track.js', (request, response) => {
+    response.sendFile(__dirname + '/scripts/track.js');
 });
 
 app.get('/', (request, response) => {
