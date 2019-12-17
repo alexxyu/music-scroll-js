@@ -12,7 +12,10 @@
 </head>
 <body>
     <h1>MusicScroll</h1>
-    <button id="reset" onclick="window.location.reload()">Reset</button>
+    <div id="controls">
+        <button id="reset" onclick="window.location.reload()">Reset</button>
+        <button id="fullscreen" onclick="fullscreen()">Fullscreen</button>
+    </div>
 
     <br>
     <input type="file" id="fileInput" name="file" accept="application/pdf"/>

@@ -9,11 +9,28 @@ h1 {
     font-weight: 400;  
 }
 
-#reset {
+#controls {
     position: absolute;
     top: 7%;
     right: 10%;
     display: none;
+}
+
+button {
+  background-color: #3478ff;
+  border: solid #3478ff;
+  border-radius: 5px;
+  padding: 5px 20px;
+  font-family: Tahoma;
+  font-size: 14px;
+  color: white;
+  -webkit-transition-duration: 0.4s;
+  transition-duration: 0.4s;
+}
+
+button:hover {
+  background-color: white;
+  color: #3478ff;
 }
 
 #fileInput {

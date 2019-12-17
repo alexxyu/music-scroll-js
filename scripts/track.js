@@ -26,6 +26,14 @@ async function renderPage(page) {
     await page.render(renderContext);
 }
 
+function fullscreen() {
+    if(document.fullscreenEnabled) {
+        document.getElementById("canvas").requestFullscreen();
+    }
+    else 
+        alert("Your browser does not have fullscreen enabled.");
+}
+
 // Function to check if face movement constitutes a page turn signal
 function isGesture(currDetection, prevDetection, thresh) {
     if(typeof currDetection == 'undefined' || typeof prevDetection == 'undefined')
@@ -60,7 +68,7 @@ inputElement.addEventListener('change', (e) => {
             renderPage(page);
             inputElement.remove();
             document.getElementsByTagName('footer')[0].remove();
-            document.getElementById('reset').style.display = 'block';
+            document.getElementById('controls').style.display = 'block';
         });
 
         // Load face models and begin camera input
