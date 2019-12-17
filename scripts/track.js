@@ -1,3 +1,4 @@
+const faceDetectionConfidenceThresh = 0.4;
 const gestureThresh = 15;
 const timeThresh = 5000;
 
@@ -8,17 +9,18 @@ async function renderPage(page) {
     const context = canvas.getContext('2d');
     context.clearRect(0, 0, canvas.width, canvas.height);
 
-    let scale = 1.0;
-    let viewport = page.getViewport({scale: scale});
+    const viewport = page.getViewport({scale: 1.0});
+    const scale = window.screen.availHeight / viewport.height;
+    const scaledViewport = page.getViewport({scale: scale});
 
     // Prepare canvas using PDF page dimensions
-    canvas.height = viewport.height;
-    canvas.width = viewport.width;
+    canvas.height = scaledViewport.height;
+    canvas.width = scaledViewport.width;
 
     // Render PDF page into canvas context
     let renderContext = {
         canvasContext: context,
-        viewport: viewport
+        viewport: scaledViewport
     };
 
     await page.render(renderContext);
@@ -84,7 +86,7 @@ inputElement.addEventListener('change', (e) => {
 
             // Tracks face every 100 ms
             setInterval(async () => {
-                const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions({scoreThreshold:0.5}));
+                const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions({scoreThreshold: faceDetectionConfidenceThresh}));
                 const resizedDetections = faceapi.resizeResults(detections, displaySize);
 
                 const currTime = Date.now();
