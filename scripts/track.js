@@ -1,8 +1,8 @@
 const gestureThresh = 15;
-const timeThresh = 3000;
+const timeThresh = 5000;
 
 // Function to change which PDF page is displayed
-function renderPage(page) {
+async function renderPage(page) {
 
     let canvas = document.getElementById('canvas');
     const context = canvas.getContext('2d');
@@ -21,11 +21,7 @@ function renderPage(page) {
         viewport: viewport
     };
 
-    page.render(renderContext);
-    if (context) {
-        context.clearRect(0, 0, canvas.width, canvas.height);
-        context.beginPath();
-    }
+    await page.render(renderContext);
 }
 
 // Function to check if face movement constitutes a page turn signal
