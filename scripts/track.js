@@ -16,6 +16,7 @@ async function renderPage(page) {
     // Prepare canvas using PDF page dimensions
     canvas.height = scaledViewport.height;
     canvas.width = scaledViewport.width;
+    canvas.style.border = "solid 5px black";
 
     // Render PDF page into canvas context
     let renderContext = {
@@ -52,7 +53,6 @@ function isGesture(currDetection, prevDetection, thresh) {
     return y1 - y2;
 }
 
-let imgElement = document.getElementById('imageSrc');
 let inputElement = document.getElementById('fileInput');
 
 // Handle PDF file upload
@@ -67,6 +67,7 @@ inputElement.addEventListener('change', (e) => {
         pdf.getPage(currPage).then(function(page) {
             renderPage(page);
             inputElement.remove();
+            document.getElementsByTagName('h1')[0].remove();
             document.getElementsByTagName('footer')[0].remove();
             document.getElementById('controls').style.display = 'block';
         });
