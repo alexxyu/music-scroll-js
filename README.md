@@ -9,5 +9,5 @@ This is the web app version of MusicScroll, [originally written in Python](https
 ## To-Do / Possible Features
 * Option to use URL to PDF file
 * Faster PDF rendering
-* Fit-to-screen PDF rendering
+* Mobile compatibility
 * Custom gestures
